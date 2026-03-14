@@ -393,51 +393,7 @@
   border: 1px solid rgba(0,0,0,0.06);
 }
 
-/* Boca (equipo objetivo) — azul / oro */
-.team-card--boca {
-  border: 2px solid transparent;
-  background:
-    linear-gradient(180deg, #fffef8 0%, #eff6ff 100%) padding-box,
-    linear-gradient(135deg, #1e3a5f, #2563eb, #d4af37) border-box;
-  box-shadow:
-    0 0 0 1px rgba(37, 99, 235, 0.2),
-    0 3px 14px rgba(30, 58, 95, 0.18);
-}
-
-.team-card--boca.team-card--in-slot {
-  background:
-    linear-gradient(180deg, #fffefb 0%, #dbeafe 100%) padding-box,
-    linear-gradient(135deg, #1e40af, #3b82f6, #ca8a04) border-box;
-  box-shadow:
-    0 0 0 1px rgba(59, 130, 246, 0.35),
-    0 4px 16px rgba(30, 64, 175, 0.22);
-}
-
-.team-card__pill {
-  display: inline-block;
-  font-size: 0.55rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.12rem 0.35rem;
-  border-radius: 4px;
-  margin-bottom: 0.12rem;
-  width: fit-content;
-}
-
-.team-card__pill--boca {
-  background: linear-gradient(135deg, #1e40af, #2563eb);
-  color: #fef9c3;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-}
-
-.team-card__pill--favorite {
-  background: linear-gradient(135deg, #047857, #10b981);
-  color: #ecfdf5;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-}
-
-.team-card--favorite:not(.team-card--boca) {
+.team-card--favorite {
   border: 2px solid transparent;
   background:
     linear-gradient(rgba(255, 253, 245, 0.98), rgba(255, 250, 235, 0.98)) padding-box,
@@ -445,13 +401,30 @@
   box-shadow: 0 0 0 1px rgba(5, 150, 105, 0.15), 0 2px 10px rgba(5, 100, 80, 0.12);
 }
 
-.team-card--favorite.team-card--in-slot:not(.team-card--boca) {
+.team-card--favorite.team-card--in-slot {
   background:
     linear-gradient(rgba(255, 255, 255, 0.98), rgba(236, 253, 245, 0.98)) padding-box,
     linear-gradient(135deg, #059669, #34d399) border-box;
+}
+
+/* Boca en su grupo */
+.team-card--boca.team-card--in-slot {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#fffef8, #fff9e6) padding-box,
+    linear-gradient(135deg, #1e3a8a 0%, #2563eb 35%, #fbbf24 70%, #f59e0b 100%) border-box;
   box-shadow:
-    0 0 0 1px rgba(16, 185, 129, 0.35),
-    0 3px 12px rgba(5, 100, 80, 0.15);
+    0 0 0 1px rgba(30, 58, 138, 0.2),
+    0 3px 12px rgba(30, 58, 138, 0.18);
+}
+
+.team-card--boca .team-card__name {
+  color: #1e3a8a;
+  font-weight: 800;
+}
+
+.team-card--boca .team-card__city {
+  color: #4338ca;
 }
 
 .team-card__prob--favorite {
@@ -562,8 +535,35 @@
   text-transform: uppercase;
   min-width: 1.5rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0.2rem;
+}
+
+.group--boca {
+  border-color: rgba(251, 191, 36, 0.45);
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.2) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(251, 191, 36, 0.12) 100%);
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15), inset 0 0 20px rgba(30, 58, 138, 0.06);
+}
+
+.group--boca .group__letter {
+  color: #fbbf24;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.35);
+}
+
+.group__badge-boca {
+  display: block;
+  font-size: 0.5rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1e3a8a;
+  background: linear-gradient(180deg, #fbbf24, #f59e0b);
+  padding: 0.12rem 0.28rem;
+  border-radius: 4px;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .group__slots {

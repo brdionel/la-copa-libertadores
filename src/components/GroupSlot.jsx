@@ -4,7 +4,7 @@ import { POT_LABEL } from '../data/teams'
 
 const POT_FOR_SLOT = ['A', 'B', 'C', 'D']
 
-export function GroupSlot({ groupId, slotIndex, team }) {
+export function GroupSlot({ groupId, slotIndex, team, favoriteInBocaGroup = false }) {
   const expectedPot = POT_FOR_SLOT[slotIndex]
   const droppableId = `slot-${groupId}-${slotIndex}`
 
@@ -20,7 +20,7 @@ export function GroupSlot({ groupId, slotIndex, team }) {
       data-slot-pot={expectedPot}
     >
       {team ? (
-        <TeamCard team={team} isInGroup />
+        <TeamCard team={team} isInGroup favoriteInBocaGroup={favoriteInBocaGroup} />
       ) : (
         <span className="group-slot__placeholder">
           {POT_LABEL[expectedPot]}

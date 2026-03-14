@@ -91,38 +91,49 @@ export function simulateDraw(pots, groupNames) {
   }
 }
 
-// Simula grupos después de colocar `team` en (targetGroupId, slotIndex). ¿Algún otro del bolillero se quedaría sin ningún grupo posible?
-function wouldStrandAny(groups, groupNames, potTeams, team, targetGroupId, slotIndex, placedById, potId) {
-  const nextGroups = {}
-  groupNames.forEach((g) => {
-    nextGroups[g] = [...(groups[g] || [null, null, null, null])]
-  })
-  nextGroups[targetGroupId][slotIndex] = team
-  const nextPlaced = new Set()
-  Object.values(nextGroups)
-    .flat()
-    .filter(Boolean)
-    .forEach((t) => nextPlaced.add(t.id))
-  const remaining = potTeams.filter((t) => !nextPlaced.has(t.id))
-  for (const other of remaining) {
-    let hasValid = false
-    for (const gid of groupNames) {
-      if ((nextGroups[gid] || [])[slotIndex] != null) continue
-      const valid = getValidTeamsForGroupSlot(potTeams, nextGroups[gid], nextPlaced, potId)
-      if (valid.some((t) => t.id === other.id)) {
-        hasValid = true
-        break
-      }
-    }
-    if (!hasValid) return true
+/**
+ * ¿Se pueden colocar todos los equipos de `unplaced` en los grupos de `emptyGids`
+ * (un equipo por grupo, slot slotIndex)? Backtracking exacto (evita falsos bloqueos
+ * con varios del mismo país o restricciones encadenadas).
+ */
+function canCompletePotAssignments(
+  gState,
+  unplaced,
+  emptyGids,
+  slotIndex,
+  potTeams,
+  potId,
+  pSet
+) {
+  if (unplaced.length === 0) return true
+  if (unplaced.length !== emptyGids.length) return false
+  const team = unplaced[0]
+  const rest = unplaced.slice(1)
+  const shuffledGids = shuffle([...emptyGids])
+  for (const gid of shuffledGids) {
+    const valid = getValidTeamsForGroupSlot(potTeams, gState[gid], pSet, potId)
+    if (!valid.some((t) => t.id === team.id)) continue
+    gState[gid][slotIndex] = team
+    pSet.add(team.id)
+    const nextEmpty = emptyGids.filter((g) => g !== gid)
+    if (canCompletePotAssignments(gState, rest, nextEmpty, slotIndex, potTeams, potId, pSet))
+      return true
+    pSet.delete(team.id)
+    gState[gid][slotIndex] = null
   }
   return false
 }
 
+function cloneGroupsState(groups, groupNames) {
+  const o = {}
+  groupNames.forEach((g) => {
+    o[g] = [...(groups[g] || [null, null, null, null])]
+  })
+  return o
+}
+
 /**
- * Un solo paso del sorteo: se elige un equipo al azar del bolillero actual
- * y se lo coloca en el primer grupo (A, B, C…) donde sea válido y donde
- * ningún otro equipo del bolillero quede sin ningún grupo posible.
+ * Un paso válido = existe asignación completa del bolillero actual a los cupos libres.
  * @returns { { done: true } | { groupId, slotIndex, team } }
  */
 export function getNextDrawStep(groups, pots, groupNames) {
@@ -143,16 +154,40 @@ export function getNextDrawStep(groups, pots, groupNames) {
     )
     if (emptyInOrder.length === 0) continue
 
-    const team = unplaced[Math.floor(Math.random() * unplaced.length)]
-    for (const groupId of emptyInOrder) {
-      const groupSlots = groups[groupId] || []
-      const valid = getValidTeamsForGroupSlot(potTeams, groupSlots, placedById, potId)
-      if (!valid.some((t) => t.id === team.id)) continue
-      if (wouldStrandAny(groups, groupNames, potTeams, team, groupId, slotIndex, placedById, potId))
-        continue
-      return { groupId, slotIndex, team }
+    if (unplaced.length !== emptyInOrder.length) {
+      return {
+        error: 'Estado inconsistente: cupos libres y equipos del bolillero no coinciden.',
+        done: true,
+      }
     }
-    return { error: 'No hay grupo válido para este equipo sin dejar a otro sin opción.', done: true }
+
+    // Orden TV: primero el grupo de letra más baja con cupo libre (B, luego C…), dentro de ese grupo equipo al azar.
+    const tryTeams = shuffle([...unplaced])
+    for (const groupId of emptyInOrder) {
+      for (const team of tryTeams) {
+        const groupSlots = groups[groupId] || []
+        const valid = getValidTeamsForGroupSlot(potTeams, groupSlots, placedById, potId)
+        if (!valid.some((t) => t.id === team.id)) continue
+
+        const gState = cloneGroupsState(groups, groupNames)
+        const pSet = new Set(placedById)
+        gState[groupId][slotIndex] = team
+        pSet.add(team.id)
+        const rest = unplaced.filter((t) => t.id !== team.id)
+        const restEmpty = emptyInOrder.filter((g) => g !== groupId)
+        if (
+          canCompletePotAssignments(gState, rest, restEmpty, slotIndex, potTeams, potId, pSet)
+        ) {
+          return { groupId, slotIndex, team }
+        }
+      }
+    }
+
+    return {
+      error:
+        'No hay forma de terminar este bolillero con las reglas de país (estado bloqueado). Reiniciá o corregí a mano.',
+      done: true,
+    }
   }
   return { done: true }
 }
