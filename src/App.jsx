@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useCallback } from 'react'
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { pots, GROUP_NAMES, POT_ORDER, POT_LABEL, CAMPEON_ID, TARGET_TEAM_ID_PROB } from './data/teams'
 import { Pot } from './components/Pot'
@@ -17,7 +17,7 @@ function getInitialGroups() {
   return g
 }
 
-// Pueden coincidir dos del mismo país si el equipo que colocamos o uno ya en el grupo es de fase preliminar
+// Un país por grupo; excepción: Fase 3 (repechaje) — si el que colocamos o alguno ya en el grupo con ese país es fromPreliminar
 function canPlaceCountrywise(team, groups, groupId) {
   const row = groups[groupId] || []
   const sameCountry = row.filter((t) => t && t.country === team.country)
@@ -81,10 +81,36 @@ function wouldStrandRemainingTeams(groups, team, targetGroupId, slotIndex, potId
   return null
 }
 
+const TOAST_ERROR_HINTS = [
+  'No puede',
+  'Este slot',
+  'ya está',
+  'campeón',
+  'solo puede',
+  'No hay',
+  'Si colocás',
+  'Solo podés',
+  'No se pudo',
+  'demasiados',
+  'ningún grupo',
+  'completar',
+]
+
 function App() {
   const [groups, setGroups] = useState(getInitialGroups)
   const [activeTeam, setActiveTeam] = useState(null)
   const [message, setMessage] = useState(null)
+  const toastTimerRef = useRef(null)
+
+  const showToast = useCallback((text, ms = 2500) => {
+    if (!text) return
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
+    setMessage(text)
+    toastTimerRef.current = setTimeout(() => {
+      setMessage(null)
+      toastTimerRef.current = null
+    }, ms)
+  }, [])
 
   const placedById = useMemo(() => {
     const set = new Set()
@@ -129,6 +155,10 @@ function App() {
 
   const handleDragStart = (event) => {
     setActiveTeam(event.active.data.current?.team ?? null)
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current)
+      toastTimerRef.current = null
+    }
     setMessage(null)
   }
 
@@ -145,7 +175,7 @@ function App() {
     // Devolver al bolillero: soltar sobre el pot correspondiente
     if (overData.type === 'pot') {
       if (team.pot !== overData.potId) {
-        setMessage(`Solo podés devolver equipos al mismo bolillero (${POT_LABEL[team.pot]}).`)
+        showToast(`Solo podés devolver equipos al mismo bolillero (${POT_LABEL[team.pot]}).`, 3200)
         return
       }
       const current = getSlotOfTeam(groups, team.id)
@@ -157,8 +187,7 @@ function App() {
         next[current.groupId] = row
         return next
       })
-      setMessage(`${team.name} devuelto al ${POT_LABEL[team.pot]}.`)
-      setTimeout(() => setMessage(null), 2000)
+      showToast(`${team.name} devuelto al ${POT_LABEL[team.pot]}.`)
       return
     }
 
@@ -167,7 +196,7 @@ function App() {
     if (groupId == null || expectedPot == null) return
 
     if (team.pot !== expectedPot) {
-      setMessage(`Este slot es para un equipo del ${POT_LABEL[expectedPot]}.`)
+      showToast(`Este slot es para un equipo del ${POT_LABEL[expectedPot]}.`, 3200)
       return
     }
 
@@ -176,14 +205,17 @@ function App() {
     if (!targetValid) {
       targetGroupId = findFirstValidGroupForSlot(team, slotIndex, groups, GROUP_NAMES)
       if (!targetGroupId) {
-        setMessage(`No hay grupo posible para ${team.name} en este slot (restricción de país o campeón).`)
+        showToast(`No hay grupo posible para ${team.name} en este slot (restricción de país o campeón).`, 3500)
         return
       }
     }
 
     const stranded = wouldStrandRemainingTeams(groups, team, targetGroupId, slotIndex, expectedPot, GROUP_NAMES)
     if (stranded) {
-      setMessage(`Si colocás ${team.name} acá, ${stranded.name} no tendría ningún grupo posible. Colocá primero a ${stranded.name} en un grupo válido.`)
+      showToast(
+        `Si colocás ${team.name} acá, ${stranded.name} no tendría ningún grupo posible. Colocá primero a ${stranded.name} en un grupo válido.`,
+        4000
+      )
       return
     }
 
@@ -201,35 +233,31 @@ function App() {
       return next
     })
     if (targetGroupId !== groupId) {
-      setMessage(`${team.name} no podía ir en el Grupo ${groupId}, asignado al Grupo ${targetGroupId}`)
-    } else {
-      setMessage(currentSlot ? `${team.name} movido al Grupo ${targetGroupId}` : null)
+      showToast(`${team.name} no podía ir en el Grupo ${groupId} → asignado al Grupo ${targetGroupId}`)
+    } else if (currentSlot) {
+      showToast(`${team.name} → Grupo ${targetGroupId}`)
     }
-    setTimeout(() => setMessage(null), 2000)
   }
 
   const handleSimulateDraw = () => {
     const result = simulateDraw(pots, GROUP_NAMES)
     if (result.error) {
-      setMessage(result.error)
+      showToast(result.error, 4000)
       return
     }
     setGroups(result.groups)
-    setMessage('Sorteo simulado correctamente.')
-    setTimeout(() => setMessage(null), 3000)
+    showToast('Sorteo simulado correctamente.', 2800)
   }
 
   const handleReset = () => {
     setGroups(getInitialGroups())
-    setMessage('Sorteo reiniciado.')
-    setTimeout(() => setMessage(null), 2000)
+    showToast('Sorteo reiniciado.')
   }
 
   const handleNextStep = () => {
     const step = getNextDrawStep(groups, pots, GROUP_NAMES)
     if (step.done) {
-      setMessage(step.error || 'Sorteo completo.')
-      setTimeout(() => setMessage(null), 3000)
+      showToast(step.error || 'Sorteo completo.', step.error ? 4000 : 2500)
       return
     }
     setGroups((prev) => {
@@ -239,9 +267,10 @@ function App() {
       next[step.groupId] = row
       return next
     })
-    setMessage(`${step.team.name} → Grupo ${step.groupId}`)
-    setTimeout(() => setMessage(null), 2000)
+    showToast(`${step.team.name} → Grupo ${step.groupId}`)
   }
+
+  const toastIsError = message && TOAST_ERROR_HINTS.some((h) => message.includes(h))
 
   return (
     <DndContext
@@ -263,7 +292,6 @@ function App() {
               Reiniciar
             </button>
           </div>
-          {message && <p className={`app__message ${message.includes('No puede') || message.includes('Este slot') || message.includes('ya está') || message.includes('campeón') || message.includes('solo puede ir') ? 'app__message--error' : ''}`}>{message}</p>}
         </header>
 
         <div className="app__main">
@@ -295,6 +323,17 @@ function App() {
           </section>
         </div>
       </div>
+
+      {message ? (
+        <div
+          className={`toast ${toastIsError ? 'toast--error' : ''}`}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {message}
+        </div>
+      ) : null}
 
       <DragOverlay>
         {activeTeam ? (

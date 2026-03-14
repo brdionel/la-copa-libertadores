@@ -15,12 +15,14 @@ function getCountriesInGroup(slots) {
   return (slots || []).filter(Boolean).map((t) => t.country)
 }
 
-// Puede ir este equipo en el grupo? (regla país + excepción fase preliminar)
-function canPlaceInGroup(team, groupSlots, potId) {
+// Misma regla en todos los bombos: un país por grupo, salvo si entra o ya está un clasificado Fase 3 (repechaje)
+function canPlaceInGroup(team, groupSlots) {
   const countriesInGroup = getCountriesInGroup(groupSlots)
   if (!countriesInGroup.includes(team.country)) return true
-  if (potId === 'D') return true // bolillero 4 puede repetir país
-  return team.fromPreliminar === true || groupSlots.some((t) => t && t.country === team.country && t.fromPreliminar)
+  return (
+    team.fromPreliminar === true ||
+    groupSlots.some((t) => t && t.country === team.country && t.fromPreliminar)
+  )
 }
 
 /**
@@ -29,7 +31,7 @@ function canPlaceInGroup(team, groupSlots, potId) {
 export function getValidTeamsForGroupSlot(potTeams, groupSlots, placedById, potId) {
   return potTeams.filter(
     (t) =>
-      !placedById.has(t.id) && canPlaceInGroup(t, groupSlots, potId)
+      !placedById.has(t.id) && canPlaceInGroup(t, groupSlots)
   )
 }
 

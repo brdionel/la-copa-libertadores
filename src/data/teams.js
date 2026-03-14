@@ -3,9 +3,9 @@
 // Escudos: public/team/{badgeFile}.png        → river-plate.png, flamengo.png, etc.
 
 // Campeón vigente: va fijo en Grupo A (slot bolillero 1)
-// Fase preliminar: pueden coincidir dos del mismo país en un grupo
+// Fase 3 (repechaje): solo estos pueden compartir grupo con otro club del mismo país
 export const CAMPEON_ID = 'a1'
-export const PRELIMINAR_IDS = ['d6', 'd7', 'd8'] // Tolima FC, Sporting Cristal, Barcelona SC
+export const PRELIMINAR_IDS = ['d5', 'd6', 'd7', 'd8'] // DIM, Tolima, Sporting Cristal, Barcelona SC
 /** Equipo para el cual se calculan probabilidades de rivales (ej. Boca) */
 export const TARGET_TEAM_ID_PROB = 'a3' // Boca Juniors
 /** Solo mostrar probabilidad de rival para equipos de estos países */
@@ -47,7 +47,7 @@ export const pots = {
     { id: 'd2', name: 'Platense', city: 'Buenos Aires', country: 'Argentina', countryCode: 'ar', flag: '/country/ar.png', badge: '/team/platense.png', pot: 'D' },
     { id: 'd3', name: 'Ind. Rivadavia', city: 'Mendoza', country: 'Argentina', countryCode: 'ar', flag: '/country/ar.png', badge: '/team/ind-rivadavia.png', pot: 'D' },
     { id: 'd4', name: 'Mirassol', city: 'Mirassol', country: 'Brasil', countryCode: 'br', flag: '/country/br.png', badge: '/team/mirassol.png', pot: 'D' },
-    { id: 'd5', name: 'Independiente Medellín', city: 'Medellín', country: 'Colombia', countryCode: 'co', flag: '/country/co.png', badge: '/team/dim.png', pot: 'D' },
+    { id: 'd5', name: 'Deportivo Medellín', city: 'Medellín', country: 'Colombia', countryCode: 'co', flag: '/country/co.png', badge: '/team/dim.png', pot: 'D', fromPreliminar: true },
     { id: 'd6', name: 'Tolima FC', city: 'Ibagué', country: 'Colombia', countryCode: 'co', flag: '/country/co.png', badge: '/team/tolima.png', pot: 'D', fromPreliminar: true },
     { id: 'd7', name: 'Sporting Cristal', city: 'Lima', country: 'Perú', countryCode: 'pe', flag: '/country/pe.png', badge: '/team/sporting-cristal.png', pot: 'D', fromPreliminar: true },
     { id: 'd8', name: 'Barcelona SC', city: 'Guayaquil', country: 'Ecuador', countryCode: 'ec', flag: '/country/ec.png', badge: '/team/barcelona-sc.png', pot: 'D', fromPreliminar: true },
