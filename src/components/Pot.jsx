@@ -2,7 +2,16 @@ import { useDroppable } from '@dnd-kit/core'
 import { TeamCard } from './TeamCard'
 import { POT_LABEL } from '../data/teams'
 
-export function Pot({ title, teams, placedById, canDragFromPot = true, probabilityByTeamId, validCount, targetName }) {
+export function Pot({
+  title,
+  teams,
+  placedById,
+  canDragFromPot = true,
+  probabilityByTeamId,
+  validCount,
+  targetName,
+  favoriteVsRest,
+}) {
   const available = teams.filter((t) => !placedById.has(t.id))
   const showProb = targetName && probabilityByTeamId && ['B', 'C', 'D'].includes(title)
   const isLocked = !canDragFromPot
@@ -19,7 +28,25 @@ export function Pot({ title, teams, placedById, canDragFromPot = true, probabili
         <p className="pot__locked-msg">Completá el bolillero anterior primero</p>
       )}
       {showProb && validCount != null && !isLocked && (
-        <p className="pot__valid-count">{validCount} posibles → {validCount > 0 ? `${(100 / validCount).toFixed(1)}%` : '—'} cada uno</p>
+        <>
+          <p className="pot__valid-count">
+            {validCount} posibles → {validCount > 0 ? `${(100 / validCount).toFixed(1)}%` : '—'} c/u
+          </p>
+          {favoriteVsRest && favoriteVsRest.nValid > 0 && (
+            <p className="pot__favorite-prob">
+              <span className="pot__favorite-prob__fav">
+                Favoritos (BR/CO/VE/EC): {(favoriteVsRest.pFavorite * 100).toFixed(1)}%
+              </span>
+              <span className="pot__favorite-prob__sep"> · </span>
+              <span className="pot__favorite-prob__rest">
+                Resto: {(favoriteVsRest.pRest * 100).toFixed(1)}%
+              </span>
+              <span className="pot__favorite-prob__meta">
+                {' '}({favoriteVsRest.nFavorite} de {favoriteVsRest.nValid} equipos válidos)
+              </span>
+            </p>
+          )}
+        </>
       )}
       <div className="pot__teams">
         {available.map((team) => (

@@ -1,7 +1,15 @@
 import { useDraggable } from '@dnd-kit/core'
-import { DESIRED_RIVAL_COUNTRIES } from '../data/teams'
+import { FAVORITE_RIVAL_COUNTRIES, TARGET_TEAM_ID_PROB } from '../data/teams'
 
-export function TeamCard({ team, isInGroup = false, dragDisabled = false, probability, targetName }) {
+export function TeamCard({
+  team,
+  isInGroup = false,
+  dragDisabled = false,
+  probability,
+  targetName,
+}) {
+  const isBoca = team.id === TARGET_TEAM_ID_PROB
+  const isFavorite = FAVORITE_RIVAL_COUNTRIES.includes(team.country)
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: team.id,
     data: { team, potId: team.pot },
@@ -16,7 +24,7 @@ export function TeamCard({ team, isInGroup = false, dragDisabled = false, probab
     <div
       ref={setNodeRef}
       style={style}
-      className={`team-card ${isInGroup ? 'team-card--in-slot' : 'team-card--draggable'} ${isDragging ? 'team-card--dragging' : ''} ${dragDisabled ? 'team-card--disabled' : ''}`}
+      className={`team-card ${isInGroup ? 'team-card--in-slot' : 'team-card--draggable'} ${isDragging ? 'team-card--dragging' : ''} ${dragDisabled ? 'team-card--disabled' : ''} ${isBoca ? 'team-card--boca' : ''} ${isFavorite ? 'team-card--favorite' : ''}`}
       {...(dragDisabled ? {} : { ...listeners, ...attributes })}
     >
       <div className="team-card__badge-wrap" title={team.country}>
@@ -24,10 +32,19 @@ export function TeamCard({ team, isInGroup = false, dragDisabled = false, probab
         <img src={team.flag} alt={team.country} className="team-card__flag" />
       </div>
       <div className="team-card__info">
+        {isInGroup && isBoca && (
+          <span className="team-card__pill team-card__pill--boca">Tu club</span>
+        )}
+        {isInGroup && isFavorite && !isBoca && (
+          <span className="team-card__pill team-card__pill--favorite">Favorito</span>
+        )}
         <span className="team-card__name">{team.name}</span>
         {team.city && <span className="team-card__city">{team.city}</span>}
-        {!isInGroup && probability != null && probability > 0 && targetName && DESIRED_RIVAL_COUNTRIES.includes(team.country) && (
-          <span className="team-card__prob">vs {targetName}: {(probability * 100).toFixed(1)}%</span>
+        {!isInGroup && probability != null && probability > 0 && targetName && (
+          <span className={`team-card__prob ${isFavorite ? 'team-card__prob--favorite' : ''}`}>
+            vs {targetName}: {(probability * 100).toFixed(1)}%
+            {isFavorite ? ' ★' : ''}
+          </span>
         )}
       </div>
     </div>

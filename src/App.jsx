@@ -7,10 +7,19 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import { pots, GROUP_NAMES, POT_ORDER, POT_LABEL, CAMPEON_ID, TARGET_TEAM_ID_PROB } from './data/teams'
+import {
+  pots,
+  GROUP_NAMES,
+  POT_ORDER,
+  POT_LABEL,
+  CAMPEON_ID,
+  TARGET_TEAM_ID_PROB,
+  FAVORITE_RIVAL_COUNTRIES,
+} from './data/teams'
 import { Pot } from './components/Pot'
 import { Group } from './components/Group'
 import { TeamCard } from './components/TeamCard'
+import { BocaRivalsPanel } from './components/BocaRivalsPanel'
 import { simulateDraw, getNextDrawStep } from './utils/draw'
 import { getDrawProbabilitiesForTarget } from './utils/probability'
 import './App.css'
@@ -150,7 +159,14 @@ function App() {
   }, [])
 
   const probabilities = useMemo(
-    () => getDrawProbabilitiesForTarget(groups, pots, placedById, TARGET_TEAM_ID_PROB),
+    () =>
+      getDrawProbabilitiesForTarget(
+        groups,
+        pots,
+        placedById,
+        TARGET_TEAM_ID_PROB,
+        FAVORITE_RIVAL_COUNTRIES
+      ),
     [groups, placedById]
   )
 
@@ -313,6 +329,7 @@ function App() {
                 <Group key={name} name={name} teams={groups[name]} />
               ))}
             </div>
+            
           </section>
 
           <section className="pots-section">
@@ -326,12 +343,17 @@ function App() {
                   canDragFromPot={potUnlocked[currentPotId]}
                   probabilityByTeamId={probabilities?.byPot[currentPotId]}
                   validCount={probabilities?.validCountByPot[currentPotId]}
+                  favoriteVsRest={probabilities?.favoriteVsRestByPot?.[currentPotId]}
                   targetName={targetTeam?.name}
                 />
               ) : (
                 <p className="pots-section__complete">Sorteo completo</p>
               )}
             </div>
+          </section>
+
+          <section>
+          <BocaRivalsPanel groups={groups} groupNames={GROUP_NAMES} />
           </section>
         </div>
       </div>

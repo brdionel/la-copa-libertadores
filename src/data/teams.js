@@ -8,8 +8,10 @@ export const CAMPEON_ID = 'a1'
 export const PRELIMINAR_IDS = ['d5', 'd6', 'd7', 'd8'] // DIM, Tolima, Sporting Cristal, Barcelona SC
 /** Equipo para el cual se calculan probabilidades de rivales (ej. Boca) */
 export const TARGET_TEAM_ID_PROB = 'a3' // Boca Juniors
-/** Solo mostrar probabilidad de rival para equipos de estos países */
-export const DESIRED_RIVAL_COUNTRIES = ['Colombia', 'Venezuela', 'Ecuador', 'Perú', 'Brasil', 'Bolivia']
+/** Países que más te gustan enfrentar (resaltado + prob. conjunta vs resto) */
+export const FAVORITE_RIVAL_COUNTRIES = ['Brasil', 'Colombia', 'Venezuela', 'Ecuador']
+/** @deprecated usar FAVORITE_RIVAL_COUNTRIES; se mantiene por compatibilidad */
+export const DESIRED_RIVAL_COUNTRIES = FAVORITE_RIVAL_COUNTRIES
 
 export const pots = {
   A: [

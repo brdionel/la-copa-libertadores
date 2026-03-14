@@ -14,6 +14,24 @@ Web app en React + Vite para simular el sorteo de la Copa Libertadores: 4 bolill
 | **Excepción Fase 3** | Los clasificados por **repechaje** (Fase 3) sí pueden compartir grupo con otro equipo de su país. En datos: Deportivo Medellín, Tolima FC, Sporting Cristal, Barcelona SC. |
 | **Bombo 4** | Integrado por esos 4 de Fase 3 + equipos de menor ranking: los **no** repechaje siguen la restricción de país igual que en bombos 1–3. |
 
+## Favoritos (Brasil, Colombia, Venezuela, Ecuador)
+
+En el bolillero activo (cuando Boca ya tiene grupo) se muestra la **probabilidad de que el próximo rival de ese bombo sea “favorito”** frente al resto: entre los equipos que **aún pueden** caer en el grupo de Boca, si hay 5 brasileños/colombianos/venezolanos/ecuatorianos y 3 de otros países, P(favorito) = 5/8. Eso es exacto bajo el modelo “sorteo uniforme entre válidos”. Esos equipos llevan **borde verde/dorado** en la lista y en el grupo.
+
+## Rivales de Boca (panel en la app)
+
+Mientras armás el sorteo, si **Boca** ya está en un grupo, el panel resume **rivales**: ciudad, **km en línea recta** desde Buenos Aires y desde Bogotá, y un **enlace a Skyscanner** (EZE → aeropuerto del rival). Eso no es “precio de vuelo” en vivo.
+
+### ¿Se puede sacar precio de vuelo desde internet?
+
+| Dato | ¿Automático en la app? |
+|------|-------------------------|
+| Ciudad | Sí (ya está en cada equipo). |
+| Distancia | Sí, con coordenadas + fórmula (Haversine); es **recta**, no millas de ruta aérea. |
+| **Precio de vuelo** | **No gratis y estable**: Google Flights no ofrece API pública. Opciones reales: **Amadeus Self-Service** (cuenta + token, límite de llamadas), **Duffel**, **Kiwi Tequila**, etc. (suelen ser de pago o registro). Scraping de sitios de viajes suele violar términos de uso y se rompe a menudo. |
+
+Lo razonable sin backend ni API: **enlace al buscador** (como hace el panel) o, si más adelante querés precios, un **proxy con Amadeus** y variable de entorno con la API key.
+
 ## Móvil (Android / iPhone)
 
 En muchos Android el navegador **prioriza el scroll** al gesto de arrastre. La app usa **mantener pulsado ~0,2 s** y luego arrastrar. Si un equipo no “engancha”, probá **Chrome** en lugar del navegador del fabricante. Como alternativa siempre podés usar **Simular sorteo** / **Sortear siguiente**.

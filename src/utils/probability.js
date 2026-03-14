@@ -51,12 +51,18 @@ export function probabilityFacingTeam({ potTeams, groupSlots, placedById, potId,
  * Devuelve: { B: { b1: 0.125, b2: 0, ... }, C: {...}, D: {...} }
  * y por bolillero el total de válidos para mostrar "8 posibles → 12.5%"
  */
-export function getDrawProbabilitiesForTarget(groups, pots, placedById, targetTeamId) {
+export function getDrawProbabilitiesForTarget(
+  groups,
+  pots,
+  placedById,
+  targetTeamId,
+  favoriteCountries = []
+) {
   const groupId = getGroupContainingTeam(groups, targetTeamId)
   if (!groupId) return null
 
   const groupSlots = groups[groupId] || []
-  const result = { byPot: {}, validCountByPot: {} }
+  const result = { byPot: {}, validCountByPot: {}, favoriteVsRestByPot: {} }
 
   for (const potId of ['B', 'C', 'D']) {
     const potTeams = pots[potId] || []
@@ -69,6 +75,21 @@ export function getDrawProbabilitiesForTarget(groups, pots, placedById, targetTe
       byTeam[t.id] = valid.some((v) => v.id === t.id) ? probEach : 0
     })
     result.byPot[potId] = byTeam
+
+    const favCount =
+      favoriteCountries.length > 0
+        ? valid.filter((t) => favoriteCountries.includes(t.country)).length
+        : 0
+    result.favoriteVsRestByPot[potId] =
+      count > 0 && favoriteCountries.length > 0
+        ? {
+            pFavorite: favCount / count,
+            pRest: (count - favCount) / count,
+            nFavorite: favCount,
+            nRest: count - favCount,
+            nValid: count,
+          }
+        : null
   }
 
   return result

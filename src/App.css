@@ -137,9 +137,126 @@
   gap: 1rem;
 }
 
-/* Groups section: 2 filas × 4 columnas */
+/* Groups section: 2 filas × 4 columnas + panel Boca */
 .groups-section {
   margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Panel rivales Boca */
+.boca-panel {
+  background: linear-gradient(160deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 58, 95, 0.9) 100%);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  color: #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.boca-panel--empty {
+  opacity: 0.9;
+}
+
+.boca-panel__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.boca-panel__group {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+}
+
+.boca-panel__note {
+  margin: 0 0 0.5rem;
+  font-size: 0.68rem;
+  line-height: 1.35;
+  color: #94a3b8;
+}
+
+.boca-panel__muted {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.boca-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.boca-panel__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.boca-panel__row:last-child {
+  border-bottom: none;
+}
+
+.boca-panel__club {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  flex: 1 1 160px;
+}
+
+.boca-panel__badge {
+  border-radius: 4px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.boca-panel__name {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #f1f5f9;
+}
+
+.boca-panel__city {
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.boca-panel__metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.65rem;
+  color: #cbd5e1;
+  flex: 1 1 200px;
+}
+
+.boca-panel__link {
+  color: #7dd3fc;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 0.15rem;
+}
+
+.boca-panel__link:hover {
+  text-decoration: underline;
 }
 
 .groups {
@@ -227,6 +344,33 @@
   margin: 0 0 0.35rem;
 }
 
+.pot__favorite-prob {
+  text-align: center;
+  font-size: 0.68rem;
+  line-height: 1.35;
+  margin: 0 0 0.45rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+}
+
+.pot__favorite-prob__fav {
+  color: #6ee7b7;
+  font-weight: 700;
+}
+
+.pot__favorite-prob__rest {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.pot__favorite-prob__meta {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .pot__teams {
   display: flex;
   flex-direction: row;
@@ -247,6 +391,72 @@
   font-size: 0.75rem;
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
   border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Boca (equipo objetivo) — azul / oro */
+.team-card--boca {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(180deg, #fffef8 0%, #eff6ff 100%) padding-box,
+    linear-gradient(135deg, #1e3a5f, #2563eb, #d4af37) border-box;
+  box-shadow:
+    0 0 0 1px rgba(37, 99, 235, 0.2),
+    0 3px 14px rgba(30, 58, 95, 0.18);
+}
+
+.team-card--boca.team-card--in-slot {
+  background:
+    linear-gradient(180deg, #fffefb 0%, #dbeafe 100%) padding-box,
+    linear-gradient(135deg, #1e40af, #3b82f6, #ca8a04) border-box;
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.35),
+    0 4px 16px rgba(30, 64, 175, 0.22);
+}
+
+.team-card__pill {
+  display: inline-block;
+  font-size: 0.55rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.12rem 0.35rem;
+  border-radius: 4px;
+  margin-bottom: 0.12rem;
+  width: fit-content;
+}
+
+.team-card__pill--boca {
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  color: #fef9c3;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.team-card__pill--favorite {
+  background: linear-gradient(135deg, #047857, #10b981);
+  color: #ecfdf5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.team-card--favorite:not(.team-card--boca) {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(rgba(255, 253, 245, 0.98), rgba(255, 250, 235, 0.98)) padding-box,
+    linear-gradient(135deg, #059669, #10b981, #fbbf24) border-box;
+  box-shadow: 0 0 0 1px rgba(5, 150, 105, 0.15), 0 2px 10px rgba(5, 100, 80, 0.12);
+}
+
+.team-card--favorite.team-card--in-slot:not(.team-card--boca) {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.98), rgba(236, 253, 245, 0.98)) padding-box,
+    linear-gradient(135deg, #059669, #34d399) border-box;
+  box-shadow:
+    0 0 0 1px rgba(16, 185, 129, 0.35),
+    0 3px 12px rgba(5, 100, 80, 0.15);
+}
+
+.team-card__prob--favorite {
+  color: #047857;
+  font-weight: 700;
 }
 
 .team-card--draggable {
