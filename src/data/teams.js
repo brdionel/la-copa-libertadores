@@ -2,8 +2,8 @@
 // Banderas: public/country/{countryCode}.png  → ar.png, br.png, uy.png, etc.
 // Escudos: public/team/{badgeFile}.png        → river-plate.png, flamengo.png, etc.
 
-// Campeón vigente: va fijo en Grupo A (slot bolillero 1)
 // Fase 3 (repechaje): solo estos pueden compartir grupo con otro club del mismo país
+/** Solo referencia / datos; ya no hay cupo fijo en Grupo A */
 export const CAMPEON_ID = 'a1'
 export const PRELIMINAR_IDS = ['d5', 'd6', 'd7', 'd8'] // DIM, Tolima, Sporting Cristal, Barcelona SC
 /** Equipo para el cual se calculan probabilidades de rivales (ej. Boca) */
@@ -15,7 +15,7 @@ export const DESIRED_RIVAL_COUNTRIES = FAVORITE_RIVAL_COUNTRIES
 
 export const pots = {
   A: [
-    { id: 'a1', name: 'Flamengo', city: 'Río de Janeiro', country: 'Brasil', countryCode: 'br', flag: '/country/br.png', badge: '/team/fla.png', pot: 'A', isCampeon: true },
+    { id: 'a1', name: 'Flamengo', city: 'Río de Janeiro', country: 'Brasil', countryCode: 'br', flag: '/country/br.png', badge: '/team/fla.png', pot: 'A' },
     { id: 'a2', name: 'Palmeiras', city: 'São Paulo', country: 'Brasil', countryCode: 'br', flag: '/country/br.png', badge: '/team/palmeiras.png', pot: 'A' },
     { id: 'a3', name: 'Boca Juniors', city: 'Buenos Aires', country: 'Argentina', countryCode: 'ar', flag: '/country/ar.png', badge: '/team/boca.png', pot: 'A' },
     { id: 'a4', name: 'Peñarol', city: 'Montevideo', country: 'Uruguay', countryCode: 'uy', flag: '/country/uy.png', badge: '/team/penarol.png', pot: 'A' },

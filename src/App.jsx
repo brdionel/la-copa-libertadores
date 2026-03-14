@@ -12,7 +12,6 @@ import {
   GROUP_NAMES,
   POT_ORDER,
   POT_LABEL,
-  CAMPEON_ID,
   TARGET_TEAM_ID_PROB,
   FAVORITE_RIVAL_COUNTRIES,
 } from './data/teams'
@@ -25,10 +24,9 @@ import { getDrawProbabilitiesForTarget } from './utils/probability'
 import './App.css'
 
 function getInitialGroups() {
-  const campeon = pots.A.find((t) => t.id === CAMPEON_ID)
   const g = {}
   GROUP_NAMES.forEach((name) => {
-    g[name] = name === 'A' ? [campeon, null, null, null] : [null, null, null, null]
+    g[name] = [null, null, null, null]
   })
   return g
 }
@@ -67,12 +65,11 @@ function canPlaceInSlot(team, groups, groupId, slotIndex) {
   return team.fromPreliminar === true || sameCountry.some((t) => t.fromPreliminar === true)
 }
 
-// Primer grupo (en orden A→H) con ese slot vacío donde el equipo puede ir (campeón y país)
+// Primer grupo (A→H) con ese slot vacío donde el equipo puede ir (regla país)
 function findFirstValidGroupForSlot(team, slotIndex, groups, groupNames) {
   for (const groupId of groupNames) {
     const row = groups[groupId] || []
     if (row[slotIndex] != null) continue
-    if (groupId === 'A' && slotIndex === 0 && team.id !== CAMPEON_ID) continue
     if (!canPlaceInSlot(team, groups, groupId, slotIndex)) continue
     return groupId
   }
@@ -101,7 +98,6 @@ const TOAST_ERROR_HINTS = [
   'No puede',
   'Este slot',
   'ya está',
-  'campeón',
   'solo puede',
   'No hay',
   'Si colocás',
@@ -226,11 +222,11 @@ function App() {
     }
 
     let targetGroupId = groupId
-    const targetValid = (groupId === 'A' && slotIndex === 0 && team.id === CAMPEON_ID) || ((groupId !== 'A' || slotIndex !== 0) && canPlaceInSlot(team, groups, groupId, slotIndex))
+    const targetValid = canPlaceInSlot(team, groups, groupId, slotIndex)
     if (!targetValid) {
       targetGroupId = findFirstValidGroupForSlot(team, slotIndex, groups, GROUP_NAMES)
       if (!targetGroupId) {
-        showToast(`No hay grupo posible para ${team.name} en este slot (restricción de país o campeón).`, 3500)
+        showToast(`No hay grupo posible para ${team.name} en este slot (restricción de país).`, 3500)
         return
       }
     }

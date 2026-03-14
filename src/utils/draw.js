@@ -1,4 +1,4 @@
-import { POT_ORDER, CAMPEON_ID } from '../data/teams'
+import { POT_ORDER } from '../data/teams'
 import { getValidTeamsForGroupSlot } from './probability'
 
 function shuffle(arr) {
@@ -58,19 +58,8 @@ export function simulateDraw(pots, groupNames) {
       groups[name] = [null, null, null, null]
     })
 
-    const potA = pots.A
-    const campeon = potA.find((t) => t.id === CAMPEON_ID)
-    const cabezasRestantes = shuffle(potA.filter((t) => t.id !== CAMPEON_ID))
-    if (!campeon) return { error: 'No se encontró el campeón en el bolillero 1.', groups: null }
-
-    groups.A[0] = campeon
-    const otherGroups = groupNames.filter((g) => g !== 'A')
-    otherGroups.forEach((groupId, i) => {
-      groups[groupId][0] = cabezasRestantes[i]
-    })
-
     let failed = false
-    for (let slotIndex = 1; slotIndex < 4; slotIndex++) {
+    for (let slotIndex = 0; slotIndex < 4; slotIndex++) {
       const potId = POT_ORDER[slotIndex]
       const potTeams = pots[potId] || []
       if (
