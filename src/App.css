@@ -407,26 +407,6 @@
     linear-gradient(135deg, #059669, #34d399) border-box;
 }
 
-/* Boca en su grupo */
-.team-card--boca.team-card--in-slot {
-  border: 2px solid transparent;
-  background:
-    linear-gradient(#fffef8, #fff9e6) padding-box,
-    linear-gradient(135deg, #1e3a8a 0%, #2563eb 35%, #fbbf24 70%, #f59e0b 100%) border-box;
-  box-shadow:
-    0 0 0 1px rgba(30, 58, 138, 0.2),
-    0 3px 12px rgba(30, 58, 138, 0.18);
-}
-
-.team-card--boca .team-card__name {
-  color: #1e3a8a;
-  font-weight: 800;
-}
-
-.team-card--boca .team-card__city {
-  color: #4338ca;
-}
-
 .team-card__prob--favorite {
   color: #047857;
   font-weight: 700;
@@ -535,35 +515,8 @@
   text-transform: uppercase;
   min-width: 1.5rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.2rem;
-}
-
-.group--boca {
-  border-color: rgba(251, 191, 36, 0.45);
-  background: linear-gradient(135deg, rgba(30, 58, 138, 0.2) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(251, 191, 36, 0.12) 100%);
-  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15), inset 0 0 20px rgba(30, 58, 138, 0.06);
-}
-
-.group--boca .group__letter {
-  color: #fbbf24;
-  text-shadow: 0 0 12px rgba(251, 191, 36, 0.35);
-}
-
-.group__badge-boca {
-  display: block;
-  font-size: 0.5rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #1e3a8a;
-  background: linear-gradient(180deg, #fbbf24, #f59e0b);
-  padding: 0.12rem 0.28rem;
-  border-radius: 4px;
-  line-height: 1;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .group__slots {

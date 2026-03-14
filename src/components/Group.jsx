@@ -1,12 +1,9 @@
 import { GroupSlot } from './GroupSlot'
 
-export function Group({ name, teams, isBocaGroup = false }) {
+export function Group({ name, teams }) {
   return (
-    <div className={`group ${isBocaGroup ? 'group--boca' : ''}`}>
-      <div className="group__letter">
-        {name}
-        {isBocaGroup && <span className="group__badge-boca" aria-hidden>Boca</span>}
-      </div>
+    <div className="group">
+      <div className="group__letter">{name}</div>
       <div className="group__slots">
         {[0, 1, 2, 3].map((slotIndex) => (
           <GroupSlot
@@ -14,7 +11,6 @@ export function Group({ name, teams, isBocaGroup = false }) {
             groupId={name}
             slotIndex={slotIndex}
             team={teams[slotIndex]}
-            favoriteInBocaGroup={isBocaGroup}
           />
         ))}
       </div>

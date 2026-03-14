@@ -158,13 +158,6 @@ function App() {
     return null
   }, [])
 
-  const bocaGroupId = useMemo(() => {
-    for (const name of GROUP_NAMES) {
-      if ((groups[name] || []).some((t) => t && t.id === TARGET_TEAM_ID_PROB)) return name
-    }
-    return null
-  }, [groups])
-
   const probabilities = useMemo(
     () =>
       getDrawProbabilitiesForTarget(
@@ -333,12 +326,7 @@ function App() {
           <section className="groups-section">
             <div className="groups">
               {GROUP_NAMES.map((name) => (
-                <Group
-                  key={name}
-                  name={name}
-                  teams={groups[name]}
-                  isBocaGroup={name === bocaGroupId}
-                />
+                <Group key={name} name={name} teams={groups[name]} />
               ))}
             </div>
             
