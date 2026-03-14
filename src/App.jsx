@@ -1,5 +1,12 @@
 import { useState, useMemo, useRef, useCallback } from 'react'
-import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import {
+  DndContext,
+  DragOverlay,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
 import { pots, GROUP_NAMES, POT_ORDER, POT_LABEL, CAMPEON_ID, TARGET_TEAM_ID_PROB } from './data/teams'
 import { Pot } from './components/Pot'
 import { Group } from './components/Group'
@@ -147,9 +154,11 @@ function App() {
     [groups, placedById]
   )
 
+  // Mouse: arrastre inmediato. Touch (Android/iOS): mantener ~200ms y luego arrastrar (evita que el scroll se coma el gesto)
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { distance: 8 },
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 220, tolerance: 12 },
     })
   )
 
@@ -281,6 +290,9 @@ function App() {
       <div className="app">
         <header className="app__header">
           <h1 className="app__title">LA GLORIA ETERNA</h1>
+          <p className="app__mobile-hint">
+            En celular: <strong>mantené pulsado</strong> un equipo un instante y después <strong>arrastrá</strong> al grupo.
+          </p>
           <div className="app__actions">
             <button type="button" className="btn btn--primary" onClick={handleSimulateDraw}>
               Simular sorteo

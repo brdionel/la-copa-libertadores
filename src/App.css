@@ -17,6 +17,25 @@
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
+.app__mobile-hint {
+  display: none;
+  margin: 0 0 0.5rem;
+  padding: 0 0.5rem;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  opacity: 0.92;
+  color: rgba(255, 255, 255, 0.95);
+  max-width: 22rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 900px), (pointer: coarse) {
+  .app__mobile-hint {
+    display: block;
+  }
+}
+
 .app__subtitle {
   margin: 0 0 0.5rem;
   opacity: 0.9;
@@ -232,6 +251,11 @@
 
 .team-card--draggable {
   cursor: grab;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  min-height: 44px; /* área táctil cómoda (accesibilidad / móvil) */
 }
 
 .team-card--disabled {
@@ -368,6 +392,13 @@
   font-size: 0.7rem;
   width: 100%;
   text-align: center;
+}
+
+.team-card--in-slot:not(.team-card--disabled) {
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  min-height: 44px;
 }
 
 .group-slot .team-card {

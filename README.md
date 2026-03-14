@@ -14,6 +14,10 @@ Web app en React + Vite para simular el sorteo de la Copa Libertadores: 4 bolill
 | **Excepción Fase 3** | Los clasificados por **repechaje** (Fase 3) sí pueden compartir grupo con otro equipo de su país. En datos: Deportivo Medellín, Tolima FC, Sporting Cristal, Barcelona SC. |
 | **Bombo 4** | Integrado por esos 4 de Fase 3 + equipos de menor ranking: los **no** repechaje siguen la restricción de país igual que en bombos 1–3. |
 
+## Móvil (Android / iPhone)
+
+En muchos Android el navegador **prioriza el scroll** al gesto de arrastre. La app usa **mantener pulsado ~0,2 s** y luego arrastrar. Si un equipo no “engancha”, probá **Chrome** en lugar del navegador del fabricante. Como alternativa siempre podés usar **Simular sorteo** / **Sortear siguiente**.
+
 ## Desarrollo
 
 ```bash
